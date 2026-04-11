@@ -57,8 +57,36 @@ git checkout dev       # make sure you're on dev
 git pull               # sync with remote before starting
 # ... make your changes ...
 git push origin dev    # push to dev, never to main
+``` 
+
+---
+
+
+## Branch naming
+
+When working on a feature or a fix, create a short-lived branch off `development` following this pattern:
+
 ```
+feat/PRO-123-short-description
+fix/PRO-456-short-description
+```
+
+| Prefix | When to use | Example |
+|---|---|---|
+| `feat/` | Adding new functionality | `feat/PRO-123-property-search` |
+| `fix/` | Fixing a bug | `fix/PRO-456-booking-form-validation` |
+
+```bash
+git checkout development
+git pull
+git checkout -b feat/PRO-123-property-filters   # branch off development
+# ... do your work ...
+git push origin feat/PRO-123-property-filters   # open a PR into development when ready
+```
+
+Keep branch names lowercase and use hyphens between words.
  
+
 ---
 
 ## Folder structure
