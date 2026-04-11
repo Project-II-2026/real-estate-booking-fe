@@ -40,6 +40,27 @@ npm run lint
 
 ---
 
+
+## Branching strategy
+
+This project uses two long-lived branches:
+
+| Branch        | Purpose                                                 |
+|---------------|---------------------------------------------------------|
+| `development` | Active development - all work goes here                 |
+| `main`        | Stable/production-ready code - never pushed to directly |
+
+Always push your work to `development`. `main` is updated only via merges from `development` when a release is ready.
+
+```bash
+git checkout dev       # make sure you're on dev
+git pull               # sync with remote before starting
+# ... make your changes ...
+git push origin dev    # push to dev, never to main
+```
+ 
+---
+
 ## Folder structure
 
 ```
@@ -75,10 +96,10 @@ The `src/components/` folder is for UI building blocks that are used in more tha
 
 Good candidates for `components/`:
 
-- `AppButton.tsx` — a wrapper around Bootstrap's button with consistent variant/size props
-- `AppModal.tsx` — a controlled modal with a standard header/body/footer layout
-- `AppInput.tsx` — a labeled input with built-in error message display
-- `PropertyCard.tsx` — the card used to display a property in listings and search results
+- `AppButton.tsx` - a wrapper around Bootstrap's button with consistent variant/size props
+- `AppModal.tsx` - a controlled modal with a standard header/body/footer layout
+- `AppInput.tsx` - a labeled input with built-in error message display
+- `PropertyCard.tsx` - the card used to display a property in listings and search results
 
 A simple example:
 
@@ -130,7 +151,7 @@ import { AppButton } from '@/components/AppButton';
 
 All API calls go through the `apiClient` defined in `src/api/apiClient.ts`. Never call `fetch` directly in components or hooks.
 
-### Option 1 — service (recommended for data fetching logic)
+### Option 1 - service (recommended for data fetching logic)
 
 Create a file in `src/services/` for each resource:
 
@@ -152,7 +173,7 @@ export const propertyService = {
 };
 ```
 
-### Option 2 — hook (recommended for use inside React components)
+### Option 2 - hook (recommended for use inside React components)
 
 Create a file in `src/hooks/` that wraps the service with React Query:
 
