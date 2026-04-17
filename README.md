@@ -185,7 +185,7 @@ Create a file in `src/services/` for each resource:
 
 ```ts
 // src/services/propertyService.ts
-import { api } from '@/api/apiClient';
+import {api} from "../api/api.ts";
 
 export interface Property {
     id: string;
