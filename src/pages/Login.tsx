@@ -17,14 +17,14 @@ const Login = () => {
 
     return (
         <div className="container d-flex justify-content-center">
-            <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+            <div className="col-12 col-md-8 col-lg-6 col-xl-4">
 
                 <div className="text-center mb-4">
                     <h1 className="fs-3 fw-semibold mb-1">Welcome back</h1>
                     <p className="text-secondary mb-0">Sign in to manage your bookings.</p>
                 </div>
 
-                <div className="card shadow-lg border-secondary px-4 py-5 mx-3 rounded-4">
+                <div className="card shadow-lg border-secondary px-4 py-5 rounded-4">
                     
                     {isError && (
                         <div className="alert alert-danger py-2 small mb-4">
@@ -60,7 +60,7 @@ const Login = () => {
                             <label htmlFor="password">Password</label>
                         </div>
 
-                        {/* TODO*/}
+                        {/* TODO: add this later */}
                         {/* <div className="text-center mb-4">
                             <Link to="/forgot-password" className="text-decoration-none small text-primary fw-medium">
                                 Forgot password?
