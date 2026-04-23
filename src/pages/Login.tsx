@@ -1,103 +1,97 @@
 import * as React from "react";
-import {useState} from "react";
-import {Link} from "react-router";
-import {useLogin} from "../hooks/useAuthActions.ts";
+import { useState } from "react";
+import { Link } from "react-router"; 
+import { useLogin } from "../hooks/useAuthActions.ts";
 
 const Login = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const {mutate: login, reset, isPending, isError, error} = useLogin()
+    const { mutate: login, reset, isPending, isError, error } = useLogin();
 
     const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-        event.preventDefault()
+        event.preventDefault();
         reset();
-        login({email, password})
-    }
+        login({ email, password });
+    };
 
     return (
-        <div
-            className="min-vh-100 d-flex align-items-center justify-content-center"
-        >
-            <div className="w-100" style={{maxWidth: 400}}>
+        <div className="container d-flex justify-content-center">
+            <div className="col-12 col-md-8 col-lg-6 col-xl-4">
 
-                {/* Logo */}
                 <div className="text-center mb-4">
-                    <h1 className="fs-3 fw-semibold text-dark mb-1">Sign in</h1>
-                    <p className="text-secondary small mb-0">to continue to RealEstate</p>
+                    <h1 className="fs-3 fw-semibold mb-1">Welcome back</h1>
+                    <p className="text-secondary mb-0">Sign in to manage your bookings.</p>
                 </div>
 
-                {/* Card */}
-                <div className="card shadow-sm px-4 py-4 mx-3">
+                <div className="card shadow-lg border-secondary px-4 py-5 rounded-4">
+                    
                     {isError && (
-                        <div className="alert alert-danger py-2 small mb-3" style={{ borderRadius: 10 }}>
-                            {error?.message ?? 'Something went wrong. Please try again.'}
+                        <div className="alert alert-danger py-2 small mb-4">
+                            {error?.message ?? 'Invalid email or password.'}
                         </div>
                     )}
+
                     <form onSubmit={handleSubmit}>
 
-                        <div className="mb-3">
-                            <label htmlFor="email" className="form-label small fw-medium text-dark">
-                                Email or username
-                            </label>
+                        <div className="form-floating mb-3">
                             <input
                                 id="email"
                                 type="email"
                                 className="form-control"
                                 placeholder="name@example.com"
-                                autoComplete="email"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
+                                required
                             />
+                            <label htmlFor="email">Email address</label>
                         </div>
 
-                        <div className="mb-3">
-                            <div className="d-flex justify-content-between align-items-center mb-1">
-                                <label htmlFor="password" className="form-label small fw-medium text-dark mb-0">
-                                    Password
-                                </label>
-                                {/*TODO: add this later*/}
-                                {/*<Link to="/forgot-password" className="text-decoration-none small" style={{ color: '#0071e3' }}>*/}
-                                {/*    Forgot password?*/}
-                                {/*</Link>*/}
-                            </div>
+                        <div className="form-floating mb-3">
                             <input
                                 id="password"
                                 type="password"
                                 className="form-control"
                                 placeholder="Password"
-                                autoComplete="current-password"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
+                                required
                             />
+                            <label htmlFor="password">Password</label>
                         </div>
 
-                        {!isPending ?
-                            <button type="submit" className="btn btn-primary w-100 mt-2">
-                                Sign in
+                        {/* TODO: add this later */}
+                        {/* <div className="text-center mb-4">
+                            <Link to="/forgot-password" className="text-decoration-none small text-primary fw-medium">
+                                Forgot password?
+                            </Link>
+                        </div> 
+                        */}
+
+                        {!isPending ? (
+                            <button type="submit" className="btn btn-primary btn-lg w-100 fw-medium mt-3">
+                                Sign In
                             </button>
-                            :
-                            <div className="text-center">
-                                <div className="spinner-border text-primary" role="status">
-                                    <span className="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        }
+                        ) : (
+                            <button className="btn btn-primary btn-lg w-100 mt-3" type="button" disabled>
+                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Signing in...
+                            </button>
+                        )}
 
                     </form>
                 </div>
 
-                {/* Footer */}
                 <p className="text-center text-secondary small mt-4">
                     Don't have an account?{' '}
-                    <Link to="/register" className="text-decoration-none fw-medium" style={{color: '#0071e3'}}>
+                    <Link to="/register" className="text-decoration-none fw-bold text-primary">
                         Create one
                     </Link>
                 </p>
 
             </div>
         </div>
-    )
+    );
 };
 
 export default Login;
