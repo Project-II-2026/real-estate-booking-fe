@@ -7,19 +7,19 @@ import { PublicRoute } from "./components/PublicRoute.tsx";
 import Layout from "./components/Layout.tsx";
 
 function App() {
-    return (
-        <Routes>
-            <Route element={<Layout />}>
-                <Route element={<ProtectedRoute />}>
-                    <Route path="/" element={<Home />} />
-                </Route>
-                <Route element={<PublicRoute />}>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                </Route>
-            </Route>
-        </Routes>
-    );
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Home />} />
+        </Route>
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;
