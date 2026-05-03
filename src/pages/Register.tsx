@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 import { Link } from "react-router"; 
 import { useRegister } from "../hooks/useAuthActions.ts";
-import { TermsModal } from "../components/TermsModal.tsx"; 
+import { TermsModal } from "../components/modals/TermsModal.tsx";
 
 const Register = () => {
     const [form, setForm] = useState({
