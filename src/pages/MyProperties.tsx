@@ -1,59 +1,21 @@
 import {useState} from 'react'
-import {HomeSearch, type SearchFilters} from '../components/home/HomeSearch.tsx'
-import {useProperties} from '../hooks/useProperties.ts'
+import type {PropertyResponseDto} from '../models/property.types.ts'
+import {useMyProperties} from '../hooks/useProperties.ts'
 import {PropertyCard} from '../components/home/PropertyCard.tsx'
-import type {PropertySearchParams} from '../models/property.types.ts'
 
 const PAGE_SIZE = 12
 
-const buildParams = (page: number, filters: SearchFilters | null): PropertySearchParams => {
-    const params: PropertySearchParams = {page, pageSize: PAGE_SIZE}
-    if (!filters) return params
-    if (filters.location) params.location = filters.location
-    if (filters.type) params.type = filters.type as PropertySearchParams['type']
-    if (filters.minPrice) params.minPrice = Number(filters.minPrice)
-    if (filters.maxPrice) params.maxPrice = Number(filters.maxPrice)
-    if (filters.minBedrooms) params.minBedrooms = Number(filters.minBedrooms)
-    if (filters.maxBedrooms) params.maxBedrooms = Number(filters.maxBedrooms)
-    return params
-}
-
-const Home = () => {
+const MyProperties = () => {
     const [page, setPage] = useState(1)
-    const [filters, setFilters] = useState<SearchFilters | null>(null)
 
-    const {data, isLoading, isError, error} = useProperties(buildParams(page, filters))
-
-    const handleSearch = (newFilters: SearchFilters) => {
-        setFilters(newFilters)
-        setPage(1)
-    }
-
-    const handleClearFilters = () => {
-        setFilters(null)
-        setPage(1)
-    }
-
-    const hasActiveFilters = filters && (
-        filters.location || filters.type || filters.minPrice || filters.maxPrice || filters.minBedrooms || filters.maxBedrooms
-    )
+    const {data, isLoading, isError, error} = useMyProperties({page, pageSize: PAGE_SIZE})
 
     return (
         <div className="w-100 align-self-start">
-            <HomeSearch onSearch={handleSearch}/>
-
             <section className="container py-5">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h3 className="fw-semibold mb-0">Latest Listings</h3>
-
-                    {hasActiveFilters && (
-                        <button
-                            className="btn btn-light rounded-pill btn-sm fw-medium shadow-sm px-3"
-                            onClick={handleClearFilters}
-                        >
-                            Clear Filters
-                        </button>
-                    )}
+                <div className="mb-4">
+                    <h3 className="fw-semibold mb-1">My Properties</h3>
+                    <p className="text-body-secondary small mb-0">Properties you have listed.</p>
                 </div>
 
                 {isLoading && (
@@ -74,12 +36,12 @@ const Home = () => {
                     <>
                         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
                             {data && data.items.length > 0 ? (
-                                data.items.map(property => (
+                                data.items.map((property: PropertyResponseDto) => (
                                     <PropertyCard key={property.id} property={property}/>
                                 ))
                             ) : (
                                 <div className="col-12 text-center text-body-secondary py-5">
-                                    No properties match your search.
+                                    You haven't listed any properties yet.
                                 </div>
                             )}
                         </div>
@@ -122,4 +84,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default MyProperties
