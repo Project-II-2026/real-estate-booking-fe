@@ -1,0 +1,162 @@
+import * as React from 'react'
+import {useState} from 'react'
+import type {Review} from '../../models/review.types.ts'
+import {useCreateReview, useUpdateReview} from '../../hooks/useReviews.ts'
+
+interface Props {
+    onClose: () => void
+    propertyId: number
+    initialReview?: Review
+    onSubmitted?: () => void
+}
+
+export const ReviewModal: React.FC<Props> = ({onClose, propertyId, initialReview, onSubmitted}) => {
+    const isEdit = !!initialReview
+    const [rating, setRating] = useState<number>(initialReview?.rating ?? 0)
+    const [comment, setComment] = useState<string>(initialReview?.comment ?? '')
+
+    const {
+        mutate: createReview,
+        isPending: isCreating,
+        isError: isCreateError,
+        error: createError,
+    } = useCreateReview()
+
+    const {
+        mutate: updateReview,
+        isPending: isUpdating,
+        isError: isUpdateError,
+        error: updateError,
+    } = useUpdateReview()
+
+    const isPending = isCreating || isUpdating
+    const isError = isCreateError || isUpdateError
+    const error = createError ?? updateError
+
+    const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        if (rating < 1) return
+
+        const handleSuccess = () => {
+            onSubmitted?.()
+            onClose()
+        }
+
+        if (isEdit && initialReview) {
+            updateReview(
+                {id: initialReview.id, data: {rating, comment}},
+                {onSuccess: handleSuccess},
+            )
+        } else {
+            createReview(
+                {propertyId, rating, comment},
+                {onSuccess: handleSuccess},
+            )
+        }
+    }
+
+    return (
+        <div className="modal show d-block bg-dark bg-opacity-75" tabIndex={-1}>
+            <div className="modal-dialog modal-dialog-centered">
+                <form onSubmit={handleSubmit}>
+                    <div className="modal-content bg-body text-body border-secondary shadow-lg">
+                        <div className="modal-header border-secondary">
+                            <h5 className="modal-title fw-bold">
+                                {isEdit ? 'Edit your review' : 'Leave a review'}
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                onClick={onClose}
+                                aria-label="Close"
+                                disabled={isPending}
+                            />
+                        </div>
+                        <div className="modal-body p-4">
+                            <label className="form-label small fw-semibold text-body-secondary ms-2 mb-2">
+                                Your rating
+                            </label>
+                            <div className="d-flex gap-2 mb-4">
+                                {[1, 2, 3, 4, 5].map(value => (
+                                    <button
+                                        key={value}
+                                        type="button"
+                                        onClick={() => setRating(value)}
+                                        className="btn btn-link p-0 border-0 fs-3"
+                                        disabled={isPending}
+                                        aria-label={`Set rating to ${value}`}
+                                    >
+                                        <i
+                                            className={
+                                                value <= rating
+                                                    ? 'bi bi-star-fill text-warning'
+                                                    : 'bi bi-star text-body-secondary'
+                                            }
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+
+                            <label
+                                htmlFor="reviewComment"
+                                className="form-label small fw-semibold text-body-secondary ms-2 mb-2"
+                            >
+                                Your comment (optional)
+                            </label>
+                            <textarea
+                                id="reviewComment"
+                                className="form-control form-control-lg bg-body border-0 shadow-sm rounded-4 px-3"
+                                rows={4}
+                                maxLength={1000}
+                                value={comment}
+                                onChange={e => setComment(e.target.value)}
+                                disabled={isPending}
+                            />
+                            <div className="small text-body-secondary text-end mt-1">
+                                {comment.length} / 1000
+                            </div>
+
+                            {isError && (
+                                <div className="alert alert-danger py-2 small mt-3 mb-0">
+                                    {error?.message ?? 'Could not save your review.'}
+                                </div>
+                            )}
+                        </div>
+                        <div className="modal-footer border-secondary d-flex gap-2">
+                            <button
+                                type="button"
+                                className="btn btn-light rounded-pill px-4 fw-medium shadow-sm"
+                                onClick={onClose}
+                                disabled={isPending}
+                            >
+                                Cancel
+                            </button>
+                            {!isPending ? (
+                                <button
+                                    type="submit"
+                                    className="btn btn-dark rounded-pill px-4 fw-medium shadow-sm"
+                                    disabled={rating < 1}
+                                >
+                                    {isEdit ? 'Save changes' : 'Submit review'}
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    className="btn btn-dark rounded-pill px-4 fw-medium shadow-sm"
+                                    disabled
+                                >
+                                    <span
+                                        className="spinner-border spinner-border-sm me-2"
+                                        role="status"
+                                        aria-hidden="true"
+                                    />
+                                    {isEdit ? 'Saving...' : 'Submitting...'}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}

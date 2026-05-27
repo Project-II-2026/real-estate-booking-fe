@@ -62,6 +62,15 @@ export const SideNav: React.FC<SideNavProps> = ({show, onClose}) => {
                     </Link>
 
                     <Link
+                        to="/bookings"
+                        onClick={onClose}
+                        className="d-flex align-items-center px-3 py-2 rounded-4 text-body text-decoration-none fw-medium"
+                    >
+                        <i className="bi bi-calendar-check-fill me-3"/>
+                        My Bookings
+                    </Link>
+
+                    <Link
                         to="/add-property"
                         onClick={onClose}
                         className="d-flex align-items-center px-3 py-2 rounded-4 text-body text-decoration-none fw-medium"

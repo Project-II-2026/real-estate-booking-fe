@@ -1,0 +1,5 @@
+export const SLOT_DURATION_MINUTES = 30
+export const CANCELLATION_CUTOFF_HOURS = 12
+export const SLOT_GRID_START_HOUR = 9
+export const SLOT_GRID_END_HOUR = 18
+export const DAY_PICKER_MAX_AHEAD_DAYS = 30

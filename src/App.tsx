@@ -6,6 +6,7 @@ import AddProperty from "./pages/AddProperty.tsx";
 import MyProperties from "./pages/MyProperties.tsx";
 import EditProperty from "./pages/EditProperty.tsx";
 import PropertyDetails from "./pages/PropertyDetails.tsx";
+import MyBookings from "./pages/MyBookings.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { PublicRoute } from "./components/PublicRoute.tsx";
 import Layout from "./components/layout/Layout.tsx";
@@ -20,6 +21,7 @@ function App() {
           <Route path="/my-properties" element={<MyProperties />} />
           <Route path="/edit-property/:id" element={<EditProperty />} />
           <Route path="/properties/:id" element={<PropertyDetails />} />
+          <Route path="/bookings" element={<MyBookings />} />
         </Route>
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />

@@ -1,6 +1,10 @@
 import {useState} from 'react'
 import {useParams} from 'react-router'
 import {useProperty} from '../hooks/useProperties.ts'
+import {useAuth} from '../hooks/useAuth.ts'
+import {BookVisitCard} from '../components/booking/BookVisitCard.tsx'
+import {VisitRequestsPanel} from '../components/booking/VisitRequestsPanel.tsx'
+import {ReviewsSection} from '../components/review/ReviewsSection.tsx'
 
 const FALLBACK_IMAGES = [
     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80',
@@ -8,27 +12,12 @@ const FALLBACK_IMAGES = [
     'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80',
 ]
 
-const PLACEHOLDER_REVIEWS = [
-    {
-        author: 'Maria P.',
-        rating: 5,
-        date: 'April 2025',
-        text: 'Wonderful property, exactly as described. The location is perfect and the owner was very responsive.',
-    },
-    {
-        author: 'Alex D.',
-        rating: 4,
-        date: 'March 2025',
-        text: 'Great place, very clean and spacious. Would definitely recommend to anyone looking in this area.',
-    },
-]
-
 const PropertyDetails = () => {
     const {id} = useParams()
     const {data: property, isLoading, isError, error} = useProperty(Number(id))
+    const {user} = useAuth()
 
     const [activeIndex, setActiveIndex] = useState(0)
-    const [selectedDate, setSelectedDate] = useState('')
 
     if (isLoading) {
         return (
@@ -53,6 +42,8 @@ const PropertyDetails = () => {
     const images = property.images.length > 0
         ? property.images
         : [FALLBACK_IMAGES[property.id % 3]]
+
+    const isOwner = user?.id === property.ownerId
 
     const handlePrev = () => setActiveIndex(prev => (prev === 0 ? images.length - 1 : prev - 1))
     const handleNext = () => setActiveIndex(prev => (prev === images.length - 1 ? 0 : prev + 1))
@@ -166,44 +157,7 @@ const PropertyDetails = () => {
 
                         {/* Reviews */}
                         <hr className="border-opacity-25"/>
-                        <div className="mb-4">
-                            <h5 className="fw-semibold mb-3">Reviews</h5>
-
-                            <div className="d-flex align-items-center gap-2 mb-4">
-                                <span className="fs-3 fw-semibold">4.8</span>
-                                <div className="d-flex gap-1 text-warning">
-                                    {[1, 2, 3, 4, 5].map(i => (
-                                        <i key={i} className="bi bi-star-fill"/>
-                                    ))}
-                                </div>
-                                <span className="text-body-secondary small">(24 reviews)</span>
-                            </div>
-
-                            {PLACEHOLDER_REVIEWS.map(review => (
-                                <div key={review.author} className="bg-body-tertiary rounded-4 p-4 mb-3 shadow-sm">
-                                    <div className="d-flex align-items-center justify-content-between mb-2">
-                                        <div className="d-flex align-items-center gap-2">
-                                            <div
-                                                className="rounded-circle bg-body shadow-sm d-flex align-items-center justify-content-center"
-                                                style={{width: 36, height: 36}}>
-                                                <i className="bi bi-person-fill text-body-secondary"/>
-                                            </div>
-                                            <span className="fw-semibold small">{review.author}</span>
-                                        </div>
-                                        <span className="text-body-secondary small">{review.date}</span>
-                                    </div>
-                                    <div className="d-flex gap-1 mb-2">
-                                        {Array.from({length: review.rating}).map((_, i) => (
-                                            <i key={i} className="bi bi-star-fill small text-warning"/>
-                                        ))}
-                                        {Array.from({length: 5 - review.rating}).map((_, i) => (
-                                            <i key={i} className="bi bi-star small text-body-secondary"/>
-                                        ))}
-                                    </div>
-                                    <p className="mb-0 small text-body-secondary">{review.text}</p>
-                                </div>
-                            ))}
-                        </div>
+                        <ReviewsSection propertyId={property.id} ownerId={property.ownerId}/>
                     </div>
 
                     {/* Right column — sticky sidebar */}
@@ -221,38 +175,9 @@ const PropertyDetails = () => {
                             </div>
 
                             {/* Book a visit card */}
-                            <div className="bg-body-tertiary rounded-4 shadow-sm p-4">
-                                <h5 className="fw-semibold mb-1">Book a Visit</h5>
-                                <p className="text-body-secondary small mb-4">
-                                    Select a date to schedule a viewing.
-                                </p>
+                            <BookVisitCard property={property}/>
 
-                                <div className="mb-4">
-                                    <label className="form-label small fw-semibold text-body-secondary ms-2 mb-2">
-                                        Select Date
-                                    </label>
-                                    <input
-                                        type="date"
-                                        className="form-control bg-body border-0 shadow-sm rounded-4 px-3"
-                                        value={selectedDate}
-                                        min={new Date().toISOString().split('T')[0]}
-                                        onChange={e => setSelectedDate(e.target.value)}
-                                    />
-                                </div>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-dark btn-lg w-100 fw-semibold rounded-pill shadow-sm"
-                                    disabled={!selectedDate}
-                                >
-                                    <i className="bi bi-calendar-check-fill me-2"/>
-                                    Request Visit
-                                </button>
-
-                                <p className="text-center text-body-secondary small mt-3 mb-0">
-                                    You won't be charged yet
-                                </p>
-                            </div>
+                            {isOwner && <VisitRequestsPanel propertyId={property.id}/>}
 
                         </div>
                     </div>
