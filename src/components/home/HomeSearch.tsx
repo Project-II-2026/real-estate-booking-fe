@@ -37,142 +37,121 @@ export const HomeSearch: React.FC<HomeSearchProps> = ({onSearch}) => {
     }
 
     return (
-        <section className="bg-body py-5">
-            <div className="container py-4">
-                <div className="text-center mb-5">
-                    <h1 className="display-4 fw-semibold mb-3">
-                        Discover your new home.
+        <section className="py-7">
+            <div className="container">
+                <div className="mb-6">
+                    <div className="eyebrow eyebrow-rule mb-4">
+                        N°01 / Curated homes in Cluj
+                    </div>
+                    <h1 className="display-hero mb-4" style={{maxWidth: "16ch"}}>
+                        Architecture<br/>you can live in.
                     </h1>
-                    <p className="fs-5 text-body-secondary">
-                        Search thousands of houses and apartments.
+                    <p className="text-bone-muted" style={{fontSize: "1.0625rem", lineHeight: 1.55, maxWidth: "44ch"}}>
+                        Considered homes across Cluj-Napoca and Transylvania,
+                        updated weekly.
                     </p>
                 </div>
 
-                <div className="bg-body-tertiary rounded-5 p-4 p-md-5 mx-auto border-0">
-                    <form className="row g-3 align-items-end" onSubmit={handleSubmit}>
+                <div className="surface p-4 p-md-4">
+                    <form onSubmit={handleSubmit}>
+                        <div className="row g-3 align-items-end">
+                            <div className="col-12 col-md-3">
+                                <label htmlFor="location" className="form-label">
+                                    Where
+                                </label>
+                                <input
+                                    id="location"
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Cluj-Napoca, Mănăștur…"
+                                    value={form.location}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                        {/* Row 1: type, location, price range */}
-                        <div className="col-12 col-md-3">
-                            <label htmlFor="type"
-                                   className="form-label small fw-semibold text-body-secondary ms-2 mb-2">
-                                Property Type
-                            </label>
-                            <select
-                                id="type"
-                                className="form-select form-select-lg bg-body border-0 shadow-sm rounded-4 px-3"
-                                value={form.type}
-                                onChange={handleChange}
-                            >
-                                <option value="">All Types</option>
-                                <option value={PropertyType.House}>House</option>
-                                <option value={PropertyType.Apartment}>Apartment</option>
-                            </select>
+                            <div className="col-6 col-md-2">
+                                <label htmlFor="type" className="form-label">
+                                    Type
+                                </label>
+                                <select
+                                    id="type"
+                                    className="form-select"
+                                    value={form.type}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Any</option>
+                                    <option value={PropertyType.House}>House</option>
+                                    <option value={PropertyType.Apartment}>Apartment</option>
+                                </select>
+                            </div>
+
+                            <div className="col-6 col-md-2">
+                                <label htmlFor="minPrice" className="form-label">
+                                    Min price
+                                </label>
+                                <select
+                                    id="minPrice"
+                                    className="form-select"
+                                    value={form.minPrice}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Any</option>
+                                    <option value="50000">€50k</option>
+                                    <option value="100000">€100k</option>
+                                    <option value="250000">€250k</option>
+                                    <option value="500000">€500k</option>
+                                    <option value="1000000">€1M</option>
+                                </select>
+                            </div>
+
+                            <div className="col-6 col-md-2">
+                                <label htmlFor="maxPrice" className="form-label">
+                                    Max price
+                                </label>
+                                <select
+                                    id="maxPrice"
+                                    className="form-select"
+                                    value={form.maxPrice}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Any</option>
+                                    <option value="100000">€100k</option>
+                                    <option value="250000">€250k</option>
+                                    <option value="500000">€500k</option>
+                                    <option value="1000000">€1M</option>
+                                    <option value="2000000">€2M</option>
+                                </select>
+                            </div>
+
+                            <div className="col-6 col-md-1">
+                                <label htmlFor="minBedrooms" className="form-label">
+                                    Beds
+                                </label>
+                                <select
+                                    id="minBedrooms"
+                                    className="form-select"
+                                    value={form.minBedrooms}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Any</option>
+                                    <option value="1">1+</option>
+                                    <option value="2">2+</option>
+                                    <option value="3">3+</option>
+                                    <option value="4">4+</option>
+                                </select>
+                            </div>
+
+                            <div className="col-12 col-md-2">
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary w-100 fw-medium d-flex align-items-center justify-content-center gap-2"
+                                    style={{height: "calc(0.75rem * 2 + 1.4em + 2px)"}}
+                                >
+                                    Search
+                                    <i className="bi bi-arrow-right"/>
+                                </button>
+                            </div>
                         </div>
-
-                        <div className="col-12 col-md-3">
-                            <label htmlFor="location"
-                                   className="form-label small fw-semibold text-body-secondary ms-2 mb-2">
-                                Location
-                            </label>
-                            <input
-                                id="location"
-                                type="text"
-                                className="form-control form-control-lg bg-body border-0 shadow-sm rounded-4 px-3"
-                                placeholder="City or Area"
-                                value={form.location}
-                                onChange={handleChange}
-                            />
-                        </div>
-
-                        <div className="col-6 col-md-3">
-                            <label htmlFor="minPrice"
-                                   className="form-label small fw-semibold text-body-secondary ms-2 mb-2">
-                                Min Price
-                            </label>
-                            <select
-                                id="minPrice"
-                                className="form-select form-select-lg bg-body border-0 shadow-sm rounded-4 px-3"
-                                value={form.minPrice}
-                                onChange={handleChange}
-                            >
-                                <option value="">Any</option>
-                                <option value="50000">€50,000</option>
-                                <option value="100000">€100,000</option>
-                                <option value="250000">€250,000</option>
-                                <option value="500000">€500,000</option>
-                                <option value="1000000">€1,000,000</option>
-                            </select>
-                        </div>
-
-                        <div className="col-6 col-md-3">
-                            <label htmlFor="maxPrice"
-                                   className="form-label small fw-semibold text-body-secondary ms-2 mb-2">
-                                Max Price
-                            </label>
-                            <select
-                                id="maxPrice"
-                                className="form-select form-select-lg bg-body border-0 shadow-sm rounded-4 px-3"
-                                value={form.maxPrice}
-                                onChange={handleChange}
-                            >
-                                <option value="">Any</option>
-                                <option value="50000">€50,000</option>
-                                <option value="100000">€100,000</option>
-                                <option value="250000">€250,000</option>
-                                <option value="500000">€500,000</option>
-                                <option value="1000000">€1,000,000</option>
-                            </select>
-                        </div>
-
-                        {/* Row 2: bedrooms range + search */}
-                        <div className="col-6 col-md-3">
-                            <label htmlFor="minBedrooms"
-                                   className="form-label small fw-semibold text-body-secondary ms-2 mb-2">
-                                Min Bedrooms
-                            </label>
-                            <select
-                                id="minBedrooms"
-                                className="form-select form-select-lg bg-body border-0 shadow-sm rounded-4 px-3"
-                                value={form.minBedrooms}
-                                onChange={handleChange}
-                            >
-                                <option value="">Any</option>
-                                <option value="1">1+</option>
-                                <option value="2">2+</option>
-                                <option value="3">3+</option>
-                                <option value="4">4+</option>
-                            </select>
-                        </div>
-
-                        <div className="col-6 col-md-3">
-                            <label htmlFor="maxBedrooms"
-                                   className="form-label small fw-semibold text-body-secondary ms-2 mb-2">
-                                Max Bedrooms
-                            </label>
-                            <select
-                                id="maxBedrooms"
-                                className="form-select form-select-lg bg-body border-0 shadow-sm rounded-4 px-3"
-                                value={form.maxBedrooms}
-                                onChange={handleChange}
-                            >
-                                <option value="">Any</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5+</option>
-                            </select>
-                        </div>
-
-                        <div className="col-12 col-md-2 ms-auto">
-                            <button
-                                type="submit"
-                                className="btn btn-dark btn-lg w-100 fw-semibold rounded-pill shadow-sm"
-                            >
-                                Search
-                            </button>
-                        </div>
-
                     </form>
                 </div>
             </div>

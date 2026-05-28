@@ -21,13 +21,13 @@ const Layout = () => {
     return (
         <div
             data-bs-theme="dark"
-            className="d-flex flex-column min-vh-100 bg-body text-body"
+            className="d-flex flex-column min-vh-100 bg-ink text-bone"
         >
             {!isAuthPage && (
                 <Header onOpenSideNav={() => setShowSideNav(true)}/>
             )}
 
-            <main className="flex-grow-1 d-flex align-items-center justify-content-center py-5">
+            <main className="flex-grow-1 d-flex flex-column">
                 <Outlet/>
             </main>
 

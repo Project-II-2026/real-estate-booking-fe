@@ -64,11 +64,8 @@ export const ReviewsSection: React.FC<Props> = ({propertyId, ownerId}) => {
     const renderActions = () => {
         if (!user) {
             return (
-                <Link
-                    to="/login"
-                    className="btn btn-dark btn-sm fw-medium rounded-pill px-4 py-2 shadow-sm text-decoration-none"
-                >
-                    Log in to leave a review
+                <Link to="/login" className="btn btn-light btn-sm fw-medium">
+                    Sign in to review
                 </Link>
             )
         }
@@ -80,30 +77,26 @@ export const ReviewsSection: React.FC<Props> = ({propertyId, ownerId}) => {
                     <button
                         type="button"
                         onClick={openEdit}
-                        className="btn btn-dark btn-sm fw-medium rounded-pill px-4 py-2 shadow-sm"
+                        className="btn btn-primary btn-sm fw-medium"
                     >
-                        Edit your review
+                        Edit
                     </button>
                     {!isDeleting ? (
                         <button
                             type="button"
                             onClick={handleDelete}
-                            className="btn btn-light btn-sm fw-medium rounded-pill px-4 py-2 shadow-sm"
+                            className="btn btn-light btn-sm fw-medium"
                         >
                             Delete
                         </button>
                     ) : (
-                        <button
-                            type="button"
-                            disabled
-                            className="btn btn-light btn-sm fw-medium rounded-pill px-4 py-2 shadow-sm"
-                        >
+                        <button type="button" disabled className="btn btn-light btn-sm">
                             <span
                                 className="spinner-border spinner-border-sm me-2"
                                 role="status"
                                 aria-hidden="true"
                             />
-                            Deleting...
+                            Deleting…
                         </button>
                     )}
                 </div>
@@ -115,7 +108,7 @@ export const ReviewsSection: React.FC<Props> = ({propertyId, ownerId}) => {
                 <button
                     type="button"
                     onClick={openCreate}
-                    className="btn btn-dark btn-sm fw-medium rounded-pill px-4 py-2 shadow-sm"
+                    className="btn btn-primary btn-sm fw-medium"
                 >
                     Leave a review
                 </button>
@@ -126,83 +119,100 @@ export const ReviewsSection: React.FC<Props> = ({propertyId, ownerId}) => {
     }
 
     return (
-        <div className="mb-4">
-            <h5 className="fw-semibold mb-3">Reviews</h5>
+        <div>
+            <div className="eyebrow eyebrow-rule mb-3">Reviews</div>
 
             <div className="d-flex align-items-center justify-content-between gap-3 mb-4 flex-wrap">
                 {totalCount === 0 ? (
-                    <span className="text-body-secondary">No reviews yet</span>
+                    <span className="text-bone-muted">No reviews yet</span>
                 ) : (
-                    <div className="d-flex align-items-center gap-2">
-                        <span className="fs-3 fw-semibold">{averageRating.toFixed(1)}</span>
-                        <div className="d-flex gap-1 text-warning">
-                            {[1, 2, 3, 4, 5].map(i => (
-                                <i
-                                    key={i}
-                                    className={
-                                        i <= Math.round(averageRating)
-                                            ? 'bi bi-star-fill'
-                                            : 'bi bi-star text-body-secondary'
-                                    }
-                                />
-                            ))}
-                        </div>
-                        <span className="text-body-secondary small">
-                            ({totalCount} {totalCount === 1 ? 'review' : 'reviews'})
+                    <div className="d-flex align-items-baseline gap-3">
+                        <span className="fw-semibold tracking-tight" style={{fontSize: "2rem"}}>
+                            {averageRating.toFixed(1)}
                         </span>
+                        <div className="d-flex align-items-baseline gap-2">
+                            <div className="d-flex gap-1">
+                                {[1, 2, 3, 4, 5].map(i => (
+                                    <i
+                                        key={i}
+                                        className={
+                                            i <= Math.round(averageRating)
+                                                ? 'bi bi-star-fill text-moss'
+                                                : 'bi bi-star text-bone-faint'
+                                        }
+                                        style={{fontSize: "0.75rem"}}
+                                    />
+                                ))}
+                            </div>
+                            <span className="text-bone-muted small">
+                                {totalCount} {totalCount === 1 ? 'review' : 'reviews'}
+                            </span>
+                        </div>
                     </div>
                 )}
                 {renderActions()}
             </div>
 
             {deleteError && (
-                <div className="alert alert-danger py-2 small mb-3">
+                <div className="alert alert-danger mb-3">
                     {deleteError}
                 </div>
             )}
 
             {isLoading && (
                 <div className="text-center py-5">
-                    <div className="spinner-border text-dark border-2" role="status">
-                        <span className="visually-hidden">Loading...</span>
+                    <div className="spinner-border text-bone-muted" role="status">
+                        <span className="visually-hidden">Loading…</span>
                     </div>
                 </div>
             )}
 
             {isError && (
-                <div className="alert alert-danger py-2 small">
+                <div className="alert alert-danger">
                     {error?.message ?? 'Could not load reviews.'}
                 </div>
             )}
 
             {!isLoading && !isError && data && data.items.length === 0 && totalCount > 0 && (
-                <p className="text-body-secondary">No reviews on this page.</p>
+                <p className="text-bone-muted">No reviews on this page.</p>
             )}
 
-            {data?.items.map(review => (
-                <ReviewRow key={review.id} review={review}/>
-            ))}
+            {data && data.items.length > 0 && (
+                <div className="d-flex flex-column">
+                    {data.items.map((review, idx) => (
+                        <ReviewRow
+                            key={review.id}
+                            review={review}
+                            isLast={idx === data.items.length - 1}
+                        />
+                    ))}
+                </div>
+            )}
 
             {data && data.totalPages > 1 && (
-                <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
+                <div className="hairline-top mt-4 pt-3 d-flex justify-content-between align-items-center">
                     <button
                         type="button"
-                        className="btn btn-light rounded-pill btn-sm shadow-sm"
+                        className="btn btn-link link-muted small fw-medium d-inline-flex align-items-center gap-2"
                         disabled={!data.hasPreviousPage}
                         onClick={() => setPage(p => Math.max(1, p - 1))}
+                        style={{opacity: data.hasPreviousPage ? 1 : 0.3}}
                     >
+                        <i className="bi bi-arrow-left"/>
                         Previous
                     </button>
-                    <span className="small text-body-secondary">
+                    <span className="small text-bone-muted">
                         Page {data.page} of {data.totalPages}
                     </span>
                     <button
                         type="button"
-                        className="btn btn-light rounded-pill btn-sm shadow-sm"
+                        className="btn btn-link link-muted small fw-medium d-inline-flex align-items-center gap-2"
                         disabled={!data.hasNextPage}
                         onClick={() => setPage(p => p + 1)}
+                        style={{opacity: data.hasNextPage ? 1 : 0.3}}
                     >
                         Next
+                        <i className="bi bi-arrow-right"/>
                     </button>
                 </div>
             )}

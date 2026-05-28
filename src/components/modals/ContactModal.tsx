@@ -1,60 +1,71 @@
 import * as React from "react";
 
 interface Props {
-  show: boolean;
-  onClose: () => void;
+    show: boolean;
+    onClose: () => void;
 }
 
-export const ContactModal: React.FC<Props> = ({ show, onClose }) => {
-  if (!show) return null;
-  return (
-    <div className="modal show d-block bg-dark bg-opacity-75" tabIndex={-1}>
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content bg-body text-body border-secondary shadow-lg">
-          <div className="modal-header border-secondary">
-            <h5 className="modal-title fw-bold">Contact Us</h5>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={onClose}
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body p-4">
-            <p className="text-secondary small mb-4">
-              Have a question or need support with your booking? We're here to
-              help! Reach out to our Cluj-Napoca headquarters.
-            </p>
-            <ul className="list-unstyled small text-secondary mb-0">
-              <li className="mb-3">
-                <strong className="text-body d-block">Email Support</strong>{" "}
-                support@realestatebooking.ro
-              </li>
-              <li className="mb-3">
-                <strong className="text-body d-block">Phone</strong>
-                +40 (0) 264 123 456
-                <br />
-                <small className="text-muted">
-                  Mon-Fri, 9:00 AM - 5:00 PM (EEST)
-                </small>
-              </li>
-              <li>
-                <strong className="text-body d-block">Headquarters</strong>{" "}
-                Cluj-Napoca, Romania
-              </li>
-            </ul>
-          </div>
-          <div className="modal-footer border-secondary">
-            <button
-              type="button"
-              className="btn btn-primary px-4 w-100"
-              onClick={onClose}
-            >
-              Close
-            </button>
-          </div>
+const BACKDROP_STYLE: React.CSSProperties = {
+    backgroundColor: "rgba(10, 9, 7, 0.75)",
+    backdropFilter: "blur(8px)",
+    WebkitBackdropFilter: "blur(8px)",
+};
+
+export const ContactModal: React.FC<Props> = ({show, onClose}) => {
+    if (!show) return null;
+    return (
+        <div className="modal show d-block" tabIndex={-1} style={BACKDROP_STYLE} onClick={onClose}>
+            <div className="modal-dialog modal-dialog-centered" onClick={e => e.stopPropagation()}>
+                <div className="modal-content">
+                    <div className="modal-header d-flex justify-content-between align-items-start">
+                        <div>
+                            <div className="eyebrow mb-1">Contact</div>
+                            <h2 className="fw-semibold tracking-tight mb-0" style={{fontSize: "1.5rem"}}>
+                                Get in touch.
+                            </h2>
+                        </div>
+                        <button
+                            type="button"
+                            className="icon-btn"
+                            onClick={onClose}
+                            aria-label="Close"
+                        >
+                            <i className="bi bi-x-lg"/>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <p className="text-bone-muted mb-4" style={{fontSize: "0.9375rem", lineHeight: 1.6}}>
+                            Questions, listings, partnerships — we read every message.
+                        </p>
+
+                        <div className="d-flex flex-column gap-3">
+                            <div>
+                                <div className="eyebrow mb-1">Email</div>
+                                <a href="mailto:hello@estatly.ro" className="fw-medium" style={{fontSize: "0.9375rem"}}>
+                                    hello@estatly.ro
+                                </a>
+                            </div>
+                            <div className="hairline-top pt-3">
+                                <div className="eyebrow mb-1">Phone</div>
+                                <div className="fw-medium" style={{fontSize: "0.9375rem"}}>
+                                    +40 372 000 000
+                                </div>
+                                <div className="text-bone-faint small mt-1">
+                                    Mon–Fri, 9:00 – 17:00 EEST
+                                </div>
+                            </div>
+                            <div className="hairline-top pt-3">
+                                <div className="eyebrow mb-1">Office</div>
+                                <address className="fw-medium mb-0" style={{fontStyle: "normal", fontSize: "0.9375rem", lineHeight: 1.6}}>
+                                    Str. Memorandumului 28<br/>
+                                    Cluj-Napoca, 400114<br/>
+                                    România
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };

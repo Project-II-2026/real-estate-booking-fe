@@ -10,23 +10,24 @@ const AddProperty = () => {
     }
 
     return (
-        <div className="container d-flex justify-content-center py-5 align-self-start w-100">
-            <div className="col-12 col-md-10 col-lg-8 col-xl-6">
-                <div className="text-center mb-4">
-                    <h1 className="fs-3 fw-semibold mb-1">Add New Property</h1>
-                    <p className="text-body-secondary mb-0">Fill in the details to list your property.</p>
-                </div>
+        <div className="container py-7">
+            <div className="mx-auto" style={{maxWidth: 640}}>
+                <div className="eyebrow eyebrow-rule mb-3">List a home</div>
+                <h1 className="fw-semibold tracking-tight mb-2" style={{fontSize: "2.25rem", lineHeight: 1.1}}>
+                    Add a new property.
+                </h1>
+                <p className="text-bone-muted mb-6" style={{fontSize: "0.9375rem"}}>
+                    A few quiet details. The home does the talking.
+                </p>
 
-                <div className="card border-0 shadow-sm rounded-4 bg-body-tertiary px-4 py-4">
-                    <PropertyForm
-                        showImageUpload
-                        submitLabel="List Property"
-                        onSubmit={handleSubmit}
-                        isPending={isPending}
-                        isError={isError}
-                        error={error}
-                    />
-                </div>
+                <PropertyForm
+                    showImageUpload
+                    submitLabel="List property"
+                    onSubmit={handleSubmit}
+                    isPending={isPending}
+                    isError={isError}
+                    error={error}
+                />
             </div>
         </div>
     )

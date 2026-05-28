@@ -10,6 +10,12 @@ interface Props {
     onSubmitted?: () => void
 }
 
+const BACKDROP_STYLE: React.CSSProperties = {
+    backgroundColor: "rgba(10, 9, 7, 0.75)",
+    backdropFilter: "blur(8px)",
+    WebkitBackdropFilter: "blur(8px)",
+};
+
 export const ReviewModal: React.FC<Props> = ({onClose, propertyId, initialReview, onSubmitted}) => {
     const isEdit = !!initialReview
     const [rating, setRating] = useState<number>(initialReview?.rating ?? 0)
@@ -56,24 +62,29 @@ export const ReviewModal: React.FC<Props> = ({onClose, propertyId, initialReview
     }
 
     return (
-        <div className="modal show d-block bg-dark bg-opacity-75" tabIndex={-1}>
-            <div className="modal-dialog modal-dialog-centered">
+        <div className="modal show d-block" tabIndex={-1} style={BACKDROP_STYLE} onClick={() => !isPending && onClose()}>
+            <div className="modal-dialog modal-dialog-centered" onClick={e => e.stopPropagation()}>
                 <form onSubmit={handleSubmit}>
-                    <div className="modal-content bg-body text-body border-secondary shadow-lg">
-                        <div className="modal-header border-secondary">
-                            <h5 className="modal-title fw-bold">
-                                {isEdit ? 'Edit your review' : 'Leave a review'}
-                            </h5>
+                    <div className="modal-content">
+                        <div className="modal-header d-flex justify-content-between align-items-start">
+                            <div>
+                                <div className="eyebrow mb-1">Review</div>
+                                <h2 className="fw-semibold tracking-tight mb-0" style={{fontSize: "1.5rem"}}>
+                                    {isEdit ? 'Edit your review' : 'Leave a review'}
+                                </h2>
+                            </div>
                             <button
                                 type="button"
-                                className="btn-close"
+                                className="icon-btn"
                                 onClick={onClose}
                                 aria-label="Close"
                                 disabled={isPending}
-                            />
+                            >
+                                <i className="bi bi-x-lg"/>
+                            </button>
                         </div>
-                        <div className="modal-body p-4">
-                            <label className="form-label small fw-semibold text-body-secondary ms-2 mb-2">
+                        <div className="modal-body">
+                            <label className="form-label">
                                 Your rating
                             </label>
                             <div className="d-flex gap-2 mb-4">
@@ -82,50 +93,48 @@ export const ReviewModal: React.FC<Props> = ({onClose, propertyId, initialReview
                                         key={value}
                                         type="button"
                                         onClick={() => setRating(value)}
-                                        className="btn btn-link p-0 border-0 fs-3"
+                                        className="btn btn-link p-0 border-0"
                                         disabled={isPending}
                                         aria-label={`Set rating to ${value}`}
+                                        style={{fontSize: "1.5rem", lineHeight: 1}}
                                     >
                                         <i
                                             className={
                                                 value <= rating
-                                                    ? 'bi bi-star-fill text-warning'
-                                                    : 'bi bi-star text-body-secondary'
+                                                    ? 'bi bi-star-fill text-moss'
+                                                    : 'bi bi-star text-bone-faint'
                                             }
                                         />
                                     </button>
                                 ))}
                             </div>
 
-                            <label
-                                htmlFor="reviewComment"
-                                className="form-label small fw-semibold text-body-secondary ms-2 mb-2"
-                            >
+                            <label htmlFor="reviewComment" className="form-label">
                                 Your comment (optional)
                             </label>
                             <textarea
                                 id="reviewComment"
-                                className="form-control form-control-lg bg-body border-0 shadow-sm rounded-4 px-3"
+                                className="form-control"
                                 rows={4}
                                 maxLength={1000}
                                 value={comment}
                                 onChange={e => setComment(e.target.value)}
                                 disabled={isPending}
                             />
-                            <div className="small text-body-secondary text-end mt-1">
+                            <div className="small text-bone-faint text-end mt-1">
                                 {comment.length} / 1000
                             </div>
 
                             {isError && (
-                                <div className="alert alert-danger py-2 small mt-3 mb-0">
+                                <div className="alert alert-danger mt-3 mb-0">
                                     {error?.message ?? 'Could not save your review.'}
                                 </div>
                             )}
                         </div>
-                        <div className="modal-footer border-secondary d-flex gap-2">
+                        <div className="modal-footer">
                             <button
                                 type="button"
-                                className="btn btn-light rounded-pill px-4 fw-medium shadow-sm"
+                                className="btn btn-light fw-medium"
                                 onClick={onClose}
                                 disabled={isPending}
                             >
@@ -134,23 +143,19 @@ export const ReviewModal: React.FC<Props> = ({onClose, propertyId, initialReview
                             {!isPending ? (
                                 <button
                                     type="submit"
-                                    className="btn btn-dark rounded-pill px-4 fw-medium shadow-sm"
+                                    className="btn btn-primary fw-medium"
                                     disabled={rating < 1}
                                 >
                                     {isEdit ? 'Save changes' : 'Submit review'}
                                 </button>
                             ) : (
-                                <button
-                                    type="button"
-                                    className="btn btn-dark rounded-pill px-4 fw-medium shadow-sm"
-                                    disabled
-                                >
+                                <button type="button" className="btn btn-primary" disabled>
                                     <span
                                         className="spinner-border spinner-border-sm me-2"
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    {isEdit ? 'Saving...' : 'Submitting...'}
+                                    {isEdit ? 'Saving…' : 'Submitting…'}
                                 </button>
                             )}
                         </div>

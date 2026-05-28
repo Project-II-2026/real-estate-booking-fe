@@ -5,9 +5,9 @@ import type {PropertyResponseDto} from "../../models/property.types.ts";
 import {useAuth} from "../../hooks/useAuth.ts";
 
 const FALLBACK_IMAGES = [
-    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=600&q=80',
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80',
 ]
 
 interface Props {
@@ -25,85 +25,111 @@ export const PropertyCard: React.FC<Props> = ({property}) => {
 
     const nextSlide = (e: React.MouseEvent) => {
         e.preventDefault()
+        e.stopPropagation()
         setActiveIndex(prev => (prev === images.length - 1 ? 0 : prev + 1))
     }
 
     const prevSlide = (e: React.MouseEvent) => {
         e.preventDefault()
+        e.stopPropagation()
         setActiveIndex(prev => (prev === 0 ? images.length - 1 : prev - 1))
     }
 
     return (
         <div className="col">
-            <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative bg-body-tertiary">
-                <div className="carousel slide">
-                    <div className="carousel-inner">
-                        {images.map((img, index) => (
-                            <div
-                                key={index}
-                                className={`carousel-item ${index === activeIndex ? 'active' : ''}`}
-                            >
-                                <img
-                                    src={img}
-                                    className="d-block w-100 object-fit-cover"
-                                    height="260"
-                                    alt={`${property.title} - ${index + 1}`}
-                                />
-                            </div>
-                        ))}
-                    </div>
+            <article className="card-lift d-flex flex-column h-100">
+                <Link
+                    to={`/properties/${property.id}`}
+                    className="position-relative d-block overflow-hidden ratio-4x3"
+                    style={{borderRadius: 8}}
+                >
+                    {images.map((img, index) => (
+                        <img
+                            key={index}
+                            src={img}
+                            alt={`${property.title} — ${index + 1}`}
+                            className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+                            style={{
+                                opacity: index === activeIndex ? 1 : 0,
+                                transition: "opacity 250ms ease",
+                            }}
+                        />
+                    ))}
+
                     {images.length > 1 && (
                         <>
                             <button
-                                className="carousel-control-prev"
                                 type="button"
+                                className="position-absolute top-50 start-0 translate-middle-y ms-2 icon-btn"
                                 onClick={prevSlide}
+                                aria-label="Previous image"
+                                style={{
+                                    width: 32,
+                                    height: 32,
+                                    background: "rgba(20, 19, 15, 0.65)",
+                                    backdropFilter: "blur(6px)",
+                                    border: "1px solid var(--hairline-strong)",
+                                }}
                             >
-                                <span className="carousel-control-prev-icon" aria-hidden="true"/>
-                                <span className="visually-hidden">Previous</span>
+                                <i className="bi bi-chevron-left" style={{fontSize: 12}}/>
                             </button>
                             <button
-                                className="carousel-control-next"
                                 type="button"
+                                className="position-absolute top-50 end-0 translate-middle-y me-2 icon-btn"
                                 onClick={nextSlide}
+                                aria-label="Next image"
+                                style={{
+                                    width: 32,
+                                    height: 32,
+                                    background: "rgba(20, 19, 15, 0.65)",
+                                    backdropFilter: "blur(6px)",
+                                    border: "1px solid var(--hairline-strong)",
+                                }}
                             >
-                                <span className="carousel-control-next-icon" aria-hidden="true"/>
-                                <span className="visually-hidden">Next</span>
+                                <i className="bi bi-chevron-right" style={{fontSize: 12}}/>
                             </button>
                         </>
                     )}
-                </div>
+                </Link>
 
-                <div className="card-body d-flex flex-column p-4">
+                <div className="pt-3 d-flex flex-column flex-grow-1">
+                    <div className="eyebrow mb-2">
+                        {property.type}
+                    </div>
+
                     <Link
                         to={`/properties/${property.id}`}
-                        className="text-decoration-none text-body"
+                        className="d-block mb-1"
                     >
-                        <h5 className="card-title fw-semibold mb-1 text-truncate">
+                        <h3 className="fw-medium tracking-snug mb-0 text-truncate" style={{fontSize: "1.125rem"}}>
                             {property.title}
-                        </h5>
+                        </h3>
                     </Link>
 
-                    <p className="card-text text-body-secondary small mb-4">
+                    <p className="text-bone-muted small mb-3 text-truncate" style={{fontSize: "0.875rem"}}>
                         {property.location}
                     </p>
 
-                    <div className="mt-auto d-flex align-items-center justify-content-between">
-                        <span className="fs-5 fw-semibold text-body">
+                    <div className="mt-auto hairline-top pt-3 d-flex align-items-center justify-content-between">
+                        <span className="fw-semibold" style={{fontSize: "1rem"}}>
                             €{property.price.toLocaleString()}
                         </span>
-                        {isOwner && (
+                        {isOwner ? (
                             <Link
                                 to={`/edit-property/${property.id}`}
-                                className="btn btn-dark btn-sm fw-medium rounded-pill px-3 shadow-sm"
+                                className="link-muted small fw-medium d-inline-flex align-items-center gap-1"
                             >
-                                <i className="bi bi-pencil-fill me-2"/>
+                                <i className="bi bi-pencil"/>
                                 Edit
                             </Link>
+                        ) : (
+                            <span className="text-bone-muted" style={{fontSize: "0.8125rem"}}>
+                                {property.numberOfBedrooms} · {property.numberOfBathrooms} · {property.sizeInSquareMeters}m²
+                            </span>
                         )}
                     </div>
                 </div>
-            </div>
+            </article>
         </div>
     )
 }

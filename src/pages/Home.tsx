@@ -34,85 +34,108 @@ const Home = () => {
         setPage(1)
     }
 
-    const hasActiveFilters = filters && (
+    const hasActiveFilters = !!(filters && (
         filters.location || filters.type || filters.minPrice || filters.maxPrice || filters.minBedrooms || filters.maxBedrooms
-    )
+    ))
+
+    const totalLabel = data
+        ? `${data.totalCount} home${data.totalCount === 1 ? '' : 's'}`
+        : ''
 
     return (
-        <div className="w-100 align-self-start">
+        <div className="w-100">
             <HomeSearch onSearch={handleSearch}/>
 
-            <section className="container py-5">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h3 className="fw-semibold mb-0">Latest Listings</h3>
+            <section className="container pb-7">
+                <div className="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-3">
+                    <div>
+                        <div className="eyebrow eyebrow-rule mb-3">
+                            N°02 / Latest listings
+                        </div>
+                        <h2 className="fw-medium tracking-tight mb-0" style={{fontSize: "1.75rem"}}>
+                            Featured homes
+                        </h2>
+                    </div>
 
-                    {hasActiveFilters && (
-                        <button
-                            className="btn btn-light rounded-pill btn-sm fw-medium shadow-sm px-3"
-                            onClick={handleClearFilters}
-                        >
-                            Clear Filters
-                        </button>
-                    )}
+                    <div className="d-flex align-items-center gap-3">
+                        {data && (
+                            <span className="text-bone-muted small">{totalLabel}</span>
+                        )}
+                        {hasActiveFilters && (
+                            <button
+                                className="btn btn-light btn-sm fw-medium"
+                                onClick={handleClearFilters}
+                            >
+                                Clear filters
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 {isLoading && (
-                    <div className="text-center py-5">
-                        <div className="spinner-border text-dark border-2" role="status">
-                            <span className="visually-hidden">Loading properties...</span>
+                    <div className="text-center py-7">
+                        <div className="spinner-border text-bone-muted" role="status">
+                            <span className="visually-hidden">Loading properties…</span>
                         </div>
                     </div>
                 )}
 
                 {isError && (
-                    <div className="alert alert-danger py-2 small">
+                    <div className="alert alert-danger">
                         {error?.message ?? 'Something went wrong.'}
                     </div>
                 )}
 
                 {!isLoading && !isError && (
                     <>
-                        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5">
                             {data && data.items.length > 0 ? (
                                 data.items.map(property => (
                                     <PropertyCard key={property.id} property={property}/>
                                 ))
                             ) : (
-                                <div className="col-12 text-center text-body-secondary py-5">
+                                <div className="col-12 text-center text-bone-muted py-7">
                                     No properties match your search.
                                 </div>
                             )}
                         </div>
 
                         {data && data.totalPages > 1 && (
-                            <nav className="mt-5 d-flex justify-content-center" aria-label="Properties pagination">
-                                <ul className="pagination gap-2 mb-0">
-                                    <li className={`page-item ${!data.hasPreviousPage ? 'disabled' : ''}`}>
-                                        <button
-                                            className="btn btn-light rounded-pill btn-sm fw-medium shadow-sm px-3"
-                                            onClick={() => setPage(p => p - 1)}
-                                            disabled={!data.hasPreviousPage}
-                                        >
-                                            ← Previous
-                                        </button>
-                                    </li>
+                            <nav className="hairline-top mt-7 pt-4 d-flex justify-content-between align-items-center" aria-label="Properties pagination">
+                                <button
+                                    className="btn btn-link link-muted small fw-medium d-inline-flex align-items-center gap-2"
+                                    onClick={() => setPage(p => p - 1)}
+                                    disabled={!data.hasPreviousPage}
+                                    style={{opacity: data.hasPreviousPage ? 1 : 0.3}}
+                                >
+                                    <i className="bi bi-arrow-left"/>
+                                    Previous
+                                </button>
 
-                                    <li className="page-item disabled">
-                                        <span className="btn btn-sm px-3 fw-medium text-body-secondary">
-                                            {page} / {data.totalPages}
-                                        </span>
-                                    </li>
-
-                                    <li className={`page-item ${!data.hasNextPage ? 'disabled' : ''}`}>
+                                <div className="d-flex align-items-center gap-2">
+                                    {Array.from({length: data.totalPages}).map((_, i) => (
                                         <button
-                                            className="btn btn-light rounded-pill btn-sm fw-medium shadow-sm px-3"
-                                            onClick={() => setPage(p => p + 1)}
-                                            disabled={!data.hasNextPage}
+                                            key={i}
+                                            type="button"
+                                            onClick={() => setPage(i + 1)}
+                                            aria-label={`Page ${i + 1}`}
+                                            className="btn p-0"
+                                            style={{minWidth: 24, height: 24}}
                                         >
-                                            Next →
+                                            <span className={`page-dot${page === i + 1 ? ' active' : ''}`}/>
                                         </button>
-                                    </li>
-                                </ul>
+                                    ))}
+                                </div>
+
+                                <button
+                                    className="btn btn-link link-muted small fw-medium d-inline-flex align-items-center gap-2"
+                                    onClick={() => setPage(p => p + 1)}
+                                    disabled={!data.hasNextPage}
+                                    style={{opacity: data.hasNextPage ? 1 : 0.3}}
+                                >
+                                    Next
+                                    <i className="bi bi-arrow-right"/>
+                                </button>
                             </nav>
                         )}
                     </>

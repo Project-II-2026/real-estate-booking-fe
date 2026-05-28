@@ -1,48 +1,75 @@
 import * as React from "react";
 
-// 1. We define exactly what props the Footer should expect to receive
 interface FooterProps {
-  onOpenAbout: () => void;
-  onOpenContact: () => void;
-  onOpenTerms: () => void;
+    onOpenAbout: () => void;
+    onOpenContact: () => void;
+    onOpenTerms: () => void;
 }
 
-// 2. We tell TypeScript to apply those props to the component
 export const Footer: React.FC<FooterProps> = ({
-  onOpenAbout,
-  onOpenContact,
-  onOpenTerms,
-}) => {
-  return (
-    <footer className="bg-body-tertiary py-4 border-top mt-auto">
-      <div className="container">
-        <div className="row align-items-center flex-column-reverse flex-md-row">
-          <div className="col-md-6 text-center text-md-start mt-3 mt-md-0 small text-secondary">
-            &copy; {new Date().getFullYear()} RealEstateBooking, Inc. All rights
-            reserved.
-          </div>
-          <div className="col-md-6 text-center text-md-end small">
-            <button
-              onClick={onOpenAbout}
-              className="btn btn-link p-0 text-decoration-none text-secondary hover-text-white small align-baseline me-3"
-            >
-              About Us
-            </button>
-            <button
-              onClick={onOpenContact}
-              className="btn btn-link p-0 text-decoration-none text-secondary hover-text-white small align-baseline me-3"
-            >
-              Contact Us
-            </button>
-            <button
-              onClick={onOpenTerms}
-              className="btn btn-link p-0 text-decoration-none text-secondary hover-text-white small align-baseline"
-            >
-              Policies
-            </button>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+                                                   onOpenAbout,
+                                                   onOpenContact,
+                                                   onOpenTerms,
+                                               }) => {
+    return (
+        <footer className="hairline-top py-6 mt-auto" style={{background: '#0A0907'}}>
+            <div className="container">
+                <div className="row g-5">
+                    <div className="col-md-5">
+                        <div className="d-flex align-items-baseline mb-3">
+                            <span className="fw-semibold tracking-tight" style={{fontSize: "1.125rem"}}>
+                                Estatly<span className="moss-dot" aria-hidden="true"/>
+                            </span>
+                        </div>
+                        <p className="text-bone-muted mb-3" style={{maxWidth: "32ch", fontSize: "0.9375rem", lineHeight: 1.55}}>
+                            Considered homes across Cluj-Napoca and Transylvania.
+                        </p>
+                        <address className="text-bone-faint small mb-0" style={{fontStyle: "normal", lineHeight: 1.7}}>
+                            Str. Memorandumului 28<br/>
+                            Cluj-Napoca, 400114<br/>
+                            România
+                        </address>
+                    </div>
+
+                    <div className="col-6 col-md-3">
+                        <div className="eyebrow mb-3">Explore</div>
+                        <ul className="list-unstyled m-0 d-flex flex-column gap-2">
+                            <li>
+                                <button onClick={onOpenAbout} className="btn btn-link p-0 link-muted small text-start">
+                                    About us
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={onOpenContact} className="btn btn-link p-0 link-muted small text-start">
+                                    Contact
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={onOpenTerms} className="btn btn-link p-0 link-muted small text-start">
+                                    Terms &amp; Privacy
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div className="col-6 col-md-4">
+                        <div className="eyebrow mb-3">Contact</div>
+                        <ul className="list-unstyled m-0 d-flex flex-column gap-2 small">
+                            <li className="text-bone-muted">hello@estatly.ro</li>
+                            <li className="text-bone-muted">+40 372 000 000</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="hairline-top mt-5 pt-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                    <span className="text-bone-faint small">
+                        &copy; {new Date().getFullYear()} Estatly. All rights reserved.
+                    </span>
+                    <span className="eyebrow">
+                        Made in Cluj
+                    </span>
+                </div>
+            </div>
+        </footer>
+    );
 };

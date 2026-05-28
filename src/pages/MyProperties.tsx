@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import {Link} from 'react-router'
 import type {PropertyResponseDto} from '../models/property.types.ts'
 import {useMyProperties} from '../hooks/useProperties.ts'
 import {PropertyCard} from '../components/home/PropertyCard.tsx'
@@ -11,70 +12,72 @@ const MyProperties = () => {
     const {data, isLoading, isError, error} = useMyProperties({page, pageSize: PAGE_SIZE})
 
     return (
-        <div className="w-100 align-self-start">
-            <section className="container py-5">
-                <div className="mb-4">
-                    <h3 className="fw-semibold mb-1">My Properties</h3>
-                    <p className="text-body-secondary small mb-0">Properties you have listed.</p>
+        <div className="w-100">
+            <section className="container py-7">
+                <div className="d-flex justify-content-between align-items-end mb-5 flex-wrap gap-3">
+                    <div>
+                        <div className="eyebrow eyebrow-rule mb-3">Your account</div>
+                        <h1 className="fw-semibold tracking-tight mb-0" style={{fontSize: "2.25rem", lineHeight: 1.1}}>
+                            My properties.
+                        </h1>
+                    </div>
+                    <Link to="/add-property" className="btn btn-primary fw-medium d-inline-flex align-items-center gap-2">
+                        <i className="bi bi-plus-lg"/>
+                        List a property
+                    </Link>
                 </div>
 
                 {isLoading && (
-                    <div className="text-center py-5">
-                        <div className="spinner-border text-dark border-2" role="status">
-                            <span className="visually-hidden">Loading properties...</span>
+                    <div className="text-center py-7">
+                        <div className="spinner-border text-bone-muted" role="status">
+                            <span className="visually-hidden">Loading properties…</span>
                         </div>
                     </div>
                 )}
 
                 {isError && (
-                    <div className="alert alert-danger py-2 small">
+                    <div className="alert alert-danger">
                         {error?.message ?? 'Something went wrong.'}
                     </div>
                 )}
 
                 {!isLoading && !isError && (
                     <>
-                        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5">
                             {data && data.items.length > 0 ? (
                                 data.items.map((property: PropertyResponseDto) => (
                                     <PropertyCard key={property.id} property={property}/>
                                 ))
                             ) : (
-                                <div className="col-12 text-center text-body-secondary py-5">
+                                <div className="col-12 text-center text-bone-muted py-7">
                                     You haven't listed any properties yet.
                                 </div>
                             )}
                         </div>
 
                         {data && data.totalPages > 1 && (
-                            <nav className="mt-5 d-flex justify-content-center" aria-label="Properties pagination">
-                                <ul className="pagination gap-2 mb-0">
-                                    <li className={`page-item ${!data.hasPreviousPage ? 'disabled' : ''}`}>
-                                        <button
-                                            className="btn btn-light rounded-pill btn-sm fw-medium shadow-sm px-3"
-                                            onClick={() => setPage(p => p - 1)}
-                                            disabled={!data.hasPreviousPage}
-                                        >
-                                            ← Previous
-                                        </button>
-                                    </li>
-
-                                    <li className="page-item disabled">
-                                        <span className="btn btn-sm px-3 fw-medium text-body-secondary">
-                                            {page} / {data.totalPages}
-                                        </span>
-                                    </li>
-
-                                    <li className={`page-item ${!data.hasNextPage ? 'disabled' : ''}`}>
-                                        <button
-                                            className="btn btn-light rounded-pill btn-sm fw-medium shadow-sm px-3"
-                                            onClick={() => setPage(p => p + 1)}
-                                            disabled={!data.hasNextPage}
-                                        >
-                                            Next →
-                                        </button>
-                                    </li>
-                                </ul>
+                            <nav className="hairline-top mt-7 pt-4 d-flex justify-content-between align-items-center" aria-label="Properties pagination">
+                                <button
+                                    className="btn btn-link link-muted small fw-medium d-inline-flex align-items-center gap-2"
+                                    onClick={() => setPage(p => p - 1)}
+                                    disabled={!data.hasPreviousPage}
+                                    style={{opacity: data.hasPreviousPage ? 1 : 0.3}}
+                                >
+                                    <i className="bi bi-arrow-left"/>
+                                    Previous
+                                </button>
+                                <span className="small text-bone-muted">
+                                    Page {page} of {data.totalPages}
+                                </span>
+                                <button
+                                    className="btn btn-link link-muted small fw-medium d-inline-flex align-items-center gap-2"
+                                    onClick={() => setPage(p => p + 1)}
+                                    disabled={!data.hasNextPage}
+                                    style={{opacity: data.hasNextPage ? 1 : 0.3}}
+                                >
+                                    Next
+                                    <i className="bi bi-arrow-right"/>
+                                </button>
                             </nav>
                         )}
                     </>

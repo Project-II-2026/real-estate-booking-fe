@@ -1,45 +1,50 @@
 import * as React from "react";
 
 interface Props {
-  show: boolean;
-  onClose: () => void;
+    show: boolean;
+    onClose: () => void;
 }
-export const AboutModal: React.FC<Props> = ({ show, onClose }) => {
-  if (!show) return null;
-  return (
-    <div className="modal show d-block bg-dark bg-opacity-75" tabIndex={-1}>
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content bg-body text-body border-secondary shadow-lg">
-          <div className="modal-header border-secondary">
-            <h5 className="modal-title fw-bold">About Us</h5>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={onClose}
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body p-4 text-center">
-            <h6 className="fw-bold mb-3">RealEstateBooking</h6>
-            <p className="text-secondary small mb-0">
-              We are a passionate tech company based in{" "}
-              <strong>Cluj-Napoca, Romania</strong>, founded in{" "}
-              <strong>2026</strong>. Our mission is to revolutionize the way
-              people discover and book real estate properties by providing a
-              seamless, secure, and modern digital experience.
-            </p>
-          </div>
-          <div className="modal-footer border-secondary justify-content-center">
-            <button
-              type="button"
-              className="btn btn-primary px-4"
-              onClick={onClose}
-            >
-              Close
-            </button>
-          </div>
+
+const BACKDROP_STYLE: React.CSSProperties = {
+    backgroundColor: "rgba(10, 9, 7, 0.75)",
+    backdropFilter: "blur(8px)",
+    WebkitBackdropFilter: "blur(8px)",
+};
+
+export const AboutModal: React.FC<Props> = ({show, onClose}) => {
+    if (!show) return null;
+    return (
+        <div className="modal show d-block" tabIndex={-1} style={BACKDROP_STYLE} onClick={onClose}>
+            <div className="modal-dialog modal-dialog-centered" onClick={e => e.stopPropagation()}>
+                <div className="modal-content">
+                    <div className="modal-header d-flex justify-content-between align-items-start">
+                        <div>
+                            <div className="eyebrow mb-1">About</div>
+                            <h2 className="fw-semibold tracking-tight mb-0" style={{fontSize: "1.5rem"}}>
+                                Estatly
+                            </h2>
+                        </div>
+                        <button
+                            type="button"
+                            className="icon-btn"
+                            onClick={onClose}
+                            aria-label="Close"
+                        >
+                            <i className="bi bi-x-lg"/>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <p className="text-bone mb-3" style={{fontSize: "0.9375rem", lineHeight: 1.65}}>
+                            A quieter way to find where you live. We list considered
+                            architecture across <strong>Cluj-Napoca</strong> and Transylvania.
+                        </p>
+                        <p className="text-bone-muted small mb-0">
+                            Founded in 2026, headquartered in Cluj. We work with architects,
+                            owners, and people who care about how a home is made.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
