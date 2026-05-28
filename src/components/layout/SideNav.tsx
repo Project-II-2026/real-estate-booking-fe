@@ -1,6 +1,7 @@
 import React from "react";
 import {Link, useLocation, useNavigate} from "react-router";
 import {useAuth} from "../../hooks/useAuth.ts";
+import {UserRole} from "../../models/user.types.ts";
 
 interface SideNavProps {
     show: boolean;
@@ -13,16 +14,22 @@ interface NavItem {
     icon: string;
 }
 
-const NAV_ITEMS: NavItem[] = [
+const BASE_NAV_ITEMS: NavItem[] = [
     {to: "/my-properties", label: "My properties", icon: "bi-buildings"},
     {to: "/bookings", label: "My bookings", icon: "bi-calendar-check"},
     {to: "/add-property", label: "List a property", icon: "bi-plus-lg"},
 ];
 
+const ADMIN_NAV_ITEM: NavItem = {to: "/admin", label: "Admin dashboard", icon: "bi-shield-lock"};
+
 export const SideNav: React.FC<SideNavProps> = ({show, onClose}) => {
     const {user, logout} = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const navItems = user?.role === UserRole.SuperAdmin
+        ? [...BASE_NAV_ITEMS, ADMIN_NAV_ITEM]
+        : BASE_NAV_ITEMS;
 
     const handleLogout = async () => {
         onClose();
@@ -66,7 +73,7 @@ export const SideNav: React.FC<SideNavProps> = ({show, onClose}) => {
                     </div>
 
                     <nav className="d-flex flex-column py-2">
-                        {NAV_ITEMS.map(item => {
+                        {navItems.map(item => {
                             const isActive = location.pathname === item.to;
                             return (
                                 <Link

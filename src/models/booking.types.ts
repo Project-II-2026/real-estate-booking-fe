@@ -33,3 +33,9 @@ export interface BookingSearchParams {
     from?: string
     to?: string
 }
+
+export interface BookingAdminUpdateRequest {
+    startTime: string
+    endTime: string
+    status: BookingStatus
+}

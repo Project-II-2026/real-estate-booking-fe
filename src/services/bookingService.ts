@@ -1,6 +1,7 @@
 import type {PaginationResponse} from "../models/pagination.types.ts";
 import type {
     Booking,
+    BookingAdminUpdateRequest,
     BookingSearchParams,
     BookingSlot,
     CreateBookingRequest,
@@ -28,4 +29,13 @@ export const bookingService = {
             `/properties/${propertyId}/bookings`,
             params as unknown as Record<string, unknown>,
         ),
+
+    getAll: (params: BookingSearchParams) =>
+        api.get<PaginationResponse<Booking>>('/admin/bookings', params as unknown as Record<string, unknown>),
+
+    adminUpdate: (id: number, data: BookingAdminUpdateRequest) =>
+        api.put<Booking>(`/admin/bookings/${id}`, data),
+
+    adminDelete: (id: number) =>
+        api.delete<void>(`/admin/bookings/${id}`),
 }

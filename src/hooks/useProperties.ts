@@ -17,6 +17,7 @@ const uploadToS3 = (url: string, file: File, requiredHeaders: Record<string, str
 
 const PROPERTIES_KEY = ['properties']
 const MY_PROPERTIES_KEY = ['my-properties']
+const ADMIN_PROPERTIES_KEY = ['admin', 'properties']
 
 export const useProperties = (params: PropertySearchParams) =>
     useQuery({
@@ -58,6 +59,34 @@ export const useCreateProperty = () => {
         mutationFn: (data: PropertyCreateRequestDto) => propertyService.create(data),
         onSuccess: () => navigate('/'),
     });
+}
+
+export const useAdminUpdateProperty = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({id, data}: { id: number; data: PropertyUpdateRequestDto }) =>
+            propertyService.adminUpdate(id, data),
+        onSuccess: (_, {id}) => {
+            queryClient.invalidateQueries({queryKey: [...PROPERTIES_KEY, id]})
+            queryClient.invalidateQueries({queryKey: PROPERTIES_KEY})
+            queryClient.invalidateQueries({queryKey: MY_PROPERTIES_KEY})
+            queryClient.invalidateQueries({queryKey: ADMIN_PROPERTIES_KEY})
+        },
+    })
+}
+
+export const useDeleteProperty = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (id: number) => propertyService.remove(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: PROPERTIES_KEY})
+            queryClient.invalidateQueries({queryKey: MY_PROPERTIES_KEY})
+            queryClient.invalidateQueries({queryKey: ADMIN_PROPERTIES_KEY})
+        },
+    })
 }
 
 export const useAddPropertyWithImages = () => {

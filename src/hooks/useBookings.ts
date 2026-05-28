@@ -1,8 +1,9 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
-import type {BookingSearchParams, CreateBookingRequest} from "../models/booking.types.ts";
+import type {BookingAdminUpdateRequest, BookingSearchParams, CreateBookingRequest} from "../models/booking.types.ts";
 import {bookingService} from "../services/bookingService.ts";
 
 const BOOKINGS_KEY = ['bookings'] as const
+const ADMIN_BOOKINGS_KEY = ['admin', 'bookings'] as const
 
 export const useAvailability = (propertyId: number) =>
     useQuery({
@@ -51,6 +52,37 @@ export const useCancelBooking = () => {
         mutationFn: (id: number) => bookingService.cancel(id),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: BOOKINGS_KEY})
+        },
+    })
+}
+
+export const useAdminBookings = (params: BookingSearchParams) =>
+    useQuery({
+        queryKey: [...ADMIN_BOOKINGS_KEY, params],
+        queryFn: () => bookingService.getAll(params),
+    })
+
+export const useAdminUpdateBooking = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({id, data}: { id: number; data: BookingAdminUpdateRequest }) =>
+            bookingService.adminUpdate(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: BOOKINGS_KEY})
+            queryClient.invalidateQueries({queryKey: ADMIN_BOOKINGS_KEY})
+        },
+    })
+}
+
+export const useAdminDeleteBooking = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (id: number) => bookingService.adminDelete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: BOOKINGS_KEY})
+            queryClient.invalidateQueries({queryKey: ADMIN_BOOKINGS_KEY})
         },
     })
 }

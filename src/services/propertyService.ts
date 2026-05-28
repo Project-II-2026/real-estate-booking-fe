@@ -20,6 +20,10 @@ export const propertyService = {
         api.get<PropertyResponseDto>(`/properties/${id}`),
     update: (id: number, data: PropertyUpdateRequestDto) =>
         api.put<PropertyResponseDto>(`/properties/${id}`, data),
+    adminUpdate: (id: number, data: PropertyUpdateRequestDto) =>
+        api.put<PropertyResponseDto>(`/admin/properties/${id}`, data),
+    remove: (id: number) =>
+        api.delete<void>(`/properties/${id}`),
     create: (data: PropertyCreateRequestDto) =>
         api.post<PropertyResponseDto>('/properties', data),
     requestImageUploadUrls: (propertyId: number, data: PropertyImageUploadUrlsRequestDto) =>
